@@ -2,10 +2,12 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <codecvt>
 
 class ActualLogicStuff
 {
 public:
+    //Straight-forward operations
     bool NotOperator(bool event, int numOfOperations = 1)
     {
         if (numOfOperations % 2 == 0)
@@ -43,17 +45,17 @@ public:
     //Creates a truth truth table (obvious from the name)
     std::pair<std::vector<std::wstring>, std::vector<std::vector<bool> > > CreateATruthTable(std::vector < std::wstring> events)
     {
-        int numOfRows = pow(2, events.size());
+        int numOfRows = pow(2, events.size()); // Calculates the number of rows
         std::vector<std::vector<bool> > TruthTable;
 
         for (int i = 0; i < events.size(); i++)
         {
-            int numOfTruths = numOfRows / pow(2, i + 1);
+            int numOfTruths = numOfRows / pow(2, i + 1); //How many truths are going to be itterating
             bool currBool = true;
             std::vector<bool> currRow;
             for (int j = 0; j < numOfRows / numOfTruths; j++)
             {
-                for (int k = 0; k < numOfTruths; k++)
+                for (int k = 0; k < numOfTruths; k++)   //Creating an initial table
                 {
                     currRow.push_back(currBool);
                 }
@@ -64,23 +66,6 @@ public:
 
         return std::make_pair(events, TruthTable);
     }
-
-    //Adds an operation to a truth table (quite a long name of the function ngl)
-    /*
-    std::pair<std::vector<std::string>, std::vector<std::vector<bool> > > AddOperationToATruthTable(std::pair<std::vector<std::string>, std::vector<std::vector<bool> > > TruthTable, std::string operation)
-    {
-        TruthTable.first.push_back(operation);
-        while (true)
-        {
-            int negOp = operation.find(u8"¬");
-            if (negOp < 0)
-            {
-                break;
-            }
-            for (i = 0; i < )
-        }
-        return TruthTable;
-    }*/
 
     std::pair<std::vector<std::wstring>, std::vector<std::vector<bool> > > AddOperationToATruthTable(
     std::pair<std::vector<std::wstring>, std::vector<std::vector<bool> > > TruthTable,
@@ -113,17 +98,32 @@ public:
         {
             std::wcout << TruthTable.first[i] << "\t";
         }
-        std::cout << std::endl;
+        std::cout << std::endl << std::endl;
 
         //Print Truth Table Column-Row Order
         for (int j = 0; j < TruthTable.second[0].size(); j++)
         {
             for (int i = 0; i < TruthTable.second.size(); i++)
             {
-                std::cout << TruthTable.second[i][j] << "\t";
+                int expressionlength = TruthTable.first[i].size();
+                std::cout << ConvertBoolToString(TruthTable.second[i][j]);
+                for (int k = 0; k < expressionlength; k++) //Offsetting stuff, I wish there was a better way to separate them tho
+                {
+                    std::cout << " ";
+                }
+                std::cout << "\t";
             }
             std::cout << std::endl;
         }
+    }
+
+    std::string ConvertBoolToString(bool val)
+    {
+        if (val)
+        {
+            return "T";
+        }
+        return "F";
     }
 };
 
@@ -131,6 +131,11 @@ int main()
 {
     std::locale::global(std::locale("en_US.UTF-8"));
     std::wcout.imbue(std::locale());
+
+
+
+    //Testing stuff. Use it as a template
+
     ActualLogicStuff logic;
     /*
     std::cout << logic.NotOperator(false, 54) << std::endl;
@@ -142,11 +147,29 @@ int main()
     */
 
     std::pair<std::vector<std::wstring>, std::vector<std::vector<bool> >> truthTable = logic.CreateATruthTable({ L"p", L"q", L"r", L"s"});
-    //truthTable = logic.AddOperationToATruthTable(truthTable, u8"¬p");
-    //logic.PrintTruthTable(truthTable);
 
-    //Just an example from homework 2, problem 1, part e) (q → p ⊕ r) ∨ ((q ∧ s) → (p ∨ r))
+    //Basic Example
+    auto expression1 = [&logic](std::vector<bool> row) {
+        bool p = row[0];
+        bool q = row[1];
+        return logic.BiConditionalsOperator(p, q);
+        };
+    truthTable = logic.AddOperationToATruthTable(truthTable, L"p ↔ q", expression1);
+
+
+    // Example2: (p ∧ q) ∨ (p → q)
+    auto expression2 = [&logic](std::vector<bool> row)
+        {
+            bool p = row[0];
+            bool q = row[1];
+            bool r = row[2];
+            return logic.OrOperator(logic.AndOperator(p, q), logic.ConditionalsOperator(p, r));
+        };
+
+    truthTable = logic.AddOperationToATruthTable(truthTable, L"(p ∧ q) ∨ (p → r)", expression2);
+
     
+    //example3: from homework 2, problem 1, part e) (q → p ⊕ r) ∨ ((q ∧ s) → (p ∨ r))
     auto expression = [&logic](std::vector<bool> row) {
         bool p = row[0];
         bool q = row[1];
@@ -155,22 +178,9 @@ int main()
         return logic.OrOperator(logic.ConditionalsOperator(q, logic.XOrOperator(p, r)), logic.ConditionalsOperator(logic.AndOperator(q, s), logic.OrOperator(p, r)));
         };
 
-    std::wstring expressionText = L"(q → p ⊕ r) ∨ ((q ∧ s) → (p ∨ r))";
-    truthTable = logic.AddOperationToATruthTable(truthTable, expressionText, expression);
+
+    truthTable = logic.AddOperationToATruthTable(truthTable, L"(q → p ⊕ r) ∨ ((q ∧ s) → (p ∨ r))", expression);
     logic.PrintTruthTable(truthTable);
 
-    std::cout << "\n\n\n";
-
-    /*
-    // Example2: (p ∧ q)  ∨ (p → q)
-    auto expression2 = [&logic](std::vector<bool> row)
-        {
-            bool p = row[0];
-            bool q = row[1];
-            bool r = row[2];
-            return logic.OrOperator(logic.AndOperator(p, q), logic.ConditionalsOperator(p,r));
-        };
-
-    truthTable = logic.AddOperationToATruthTable(truthTable, "(p ∧ q)  ∨ (p → q)", expression2);
-    logic.PrintTruthTable(truthTable);*/
+    //Input way of expressions sucks ik, probably will fix that later. 
 }
