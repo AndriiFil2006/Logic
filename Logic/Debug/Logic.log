@@ -1,0 +1,10 @@
+﻿  Logic.cpp
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(46,23): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(49,27): warning C4018: '<': signed/unsigned mismatch
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(51,29): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(93,27): warning C4018: '<': signed/unsigned mismatch
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(96,31): warning C4018: '<': signed/unsigned mismatch
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(112,27): warning C4018: '<': signed/unsigned mismatch
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(119,27): warning C4018: '<': signed/unsigned mismatch
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(121,31): warning C4018: '<': signed/unsigned mismatch
+  Logic.vcxproj -> C:\work\gsu\csc2510\Logic\Debug\Logic.exe

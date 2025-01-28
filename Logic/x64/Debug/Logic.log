@@ -1,0 +1,4 @@
+﻿  Logic.cpp
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(46,23): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\work\gsu\csc2510\Logic\Logic\Logic.cpp(51,29): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  Logic.vcxproj -> C:\work\gsu\csc2510\Logic\x64\Debug\Logic.exe
